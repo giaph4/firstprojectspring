@@ -29,6 +29,7 @@ public class PermissionService {
 
     List<PermissionResponse> getAll() {
         var permissons = permissionRepository.findAll();
-        return permissons.stream().map(permissionMapper::toPermissionResponse).toList();
+        permissons.stream().map(permissionMapper::toPermissionResponse).toList();
+        return per
     }
 }

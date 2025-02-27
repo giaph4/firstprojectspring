@@ -1,5 +1,6 @@
 package com.devgiapho.identity_springboot.repository;
 
+
 import com.devgiapho.identity_springboot.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
