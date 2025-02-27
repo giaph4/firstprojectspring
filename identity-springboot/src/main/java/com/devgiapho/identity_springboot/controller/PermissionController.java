@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ import java.util.List;
 @Controller
 public class PermissionController {
     PermissionService permissionService;
-    private final RestClient.Builder builder;
 
     @PostMapping("/create")
     ApiRespone<PermissionResponse> create(@RequestBody PermissionRequest request) {
@@ -31,12 +29,18 @@ public class PermissionController {
                 .build();
     }
 
-    @GetMapping("/getAll")
+    @GetMapping
     ApiRespone<List<PermissionResponse>> getAll() {
         return ApiRespone.<List<PermissionResponse>>builder()
                 .result(permissionService.getAll())
                 .build();
     }
 
-
+    @DeleteMapping("/{permission}")
+    ApiRespone<Void> delete(@PathVariable String permission) {
+        permissionService.delete(permission);
+        return  ApiRespone.<Void>builder()
+                .message("Delete succesfully")
+                .build();
+    }
 }
