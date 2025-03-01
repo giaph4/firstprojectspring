@@ -1,9 +1,9 @@
 package com.devgiapho.identity_springboot.controller;
 
 import com.devgiapho.identity_springboot.dto.request.ApiRespone;
-import com.devgiapho.identity_springboot.dto.request.PermissionRequest;
-import com.devgiapho.identity_springboot.dto.respone.PermissionResponse;
-import com.devgiapho.identity_springboot.service.PermissionService;
+import com.devgiapho.identity_springboot.dto.request.RoleRequest;
+import com.devgiapho.identity_springboot.dto.respone.RoleResponse;
+import com.devgiapho.identity_springboot.service.RoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,30 +15,30 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/permissions")
+@RequestMapping("/roles")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Controller
-public class PermissionController {
-    PermissionService permissionService;
+public class RoleController {
+    RoleService roleService;
 
     @PostMapping("/create")
-    ApiRespone<PermissionResponse> create(@RequestBody PermissionRequest request) {
-        return ApiRespone.<PermissionResponse>builder()
-                .result(permissionService.create(request))
+    ApiRespone<RoleResponse> create(@RequestBody RoleRequest request) {
+        return ApiRespone.<RoleResponse>builder()
+                .result(roleService.create(request))
                 .build();
     }
 
     @GetMapping
-    ApiRespone<List<PermissionResponse>> getAll() {
-        return ApiRespone.<List<PermissionResponse>>builder()
-                .result(permissionService.getAll())
+    ApiRespone<List<RoleResponse>> getAll() {
+        return ApiRespone.<List<RoleResponse>>builder()
+                .result(roleService.getAll())
                 .build();
     }
 
-    @DeleteMapping("/{permission}")
-    ApiRespone<Void> delete(@PathVariable String permission) {
-        permissionService.delete(permission);
+    @DeleteMapping("/{name}")
+    ApiRespone<Void> delete(@PathVariable String name) {
+        roleService.delete(name);
         return  ApiRespone.<Void>builder()
                 .message("Delete succesfully")
                 .build();

@@ -22,7 +22,7 @@ public class RoleService {
     RoleRepository repository;
     PermissionRepository permissionRepository;
     RoleMapper roleMapper;
-    private final RoleRepository roleRepository;
+    final RoleRepository roleRepository;
 
     public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);
@@ -36,5 +36,9 @@ public class RoleService {
 
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
+    }
+
+    public void delete(String role) {
+        roleRepository.deleteById(role);
     }
 }
