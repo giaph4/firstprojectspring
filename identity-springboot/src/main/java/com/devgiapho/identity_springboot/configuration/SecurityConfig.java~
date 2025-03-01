@@ -28,8 +28,7 @@ public class SecurityConfig {
             "/users",
             "/auth/log-in",
             "/auth/introspect",
-            "/permissions",
-            "/roles"
+            ""
 
     };
 

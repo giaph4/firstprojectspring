@@ -22,7 +22,7 @@ import java.util.List;
 public class RoleController {
     RoleService roleService;
 
-    @PostMapping("/create")
+    @PostMapping()
     ApiRespone<RoleResponse> create(@RequestBody RoleRequest request) {
         return ApiRespone.<RoleResponse>builder()
                 .result(roleService.create(request))

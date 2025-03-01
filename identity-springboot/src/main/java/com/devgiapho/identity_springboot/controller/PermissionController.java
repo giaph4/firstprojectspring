@@ -22,7 +22,7 @@ import java.util.List;
 public class PermissionController {
     PermissionService permissionService;
 
-    @PostMapping("/create")
+    @PostMapping()
     ApiRespone<PermissionResponse> create(@RequestBody PermissionRequest request) {
         return ApiRespone.<PermissionResponse>builder()
                 .result(permissionService.create(request))

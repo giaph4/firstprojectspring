@@ -19,10 +19,10 @@ import java.util.List;
 @Slf4j
 @Service
 public class RoleService {
-    RoleRepository repository;
+    RoleRepository roleRepository;
     PermissionRepository permissionRepository;
     RoleMapper roleMapper;
-    final RoleRepository roleRepository;
+
 
     public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);

@@ -38,8 +38,8 @@ public class UserService {
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        HashSet<Role> roles = new HashSet<>();
-        roles.add(Role.USER);
+//        HashSet<Role> roles = new HashSet<>();
+//        roles.add(Role.USER);
 //        user.setRoles(roles);
         return userRepository.save(user);
     }
@@ -66,7 +66,6 @@ public class UserService {
 
     public User updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_EXISTS));
-
         userMapper.updateUser(user, request);
 
         return userRepository.save(user);
