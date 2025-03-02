@@ -36,15 +36,22 @@ public class UserService {
 
     // Tạo mới user từ request
     public User createUser(UserCreationRequest request) {
+        // Kiểm tra xem username đã tồn tại chưa
+        log.info("Role: {}", roleRepository.findById("USER"));
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
 
+        // Chuyển đổi request thành entity User
         User user = userMapper.toUser(request);
+        // Mã hóa mật khẩu trước khi lưu
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        // Gán role mặc định là "USER"
+
         Role role = roleRepository.findById("USER")
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         user.setRoles(new HashSet<>(List.of(role)));
+        // Lưu user vào database và trả về
         return userRepository.save(user);
     }
 
@@ -84,12 +91,17 @@ public class UserService {
     }
 
     // Cập nhật thông tin user
+    @PostAuthorize("returnObject.username == authentication.name")
     public User updateUser(String userId, UserUpdateRequest request) {
         // Tìm user theo ID, nếu không tìm thấy thì throw exception
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTS));
         // Cập nhật thông tin user từ request
         userMapper.updateUser(user, request);
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
         // Lưu thay đổi vào database và trả về
         return userRepository.save(user);
     }
