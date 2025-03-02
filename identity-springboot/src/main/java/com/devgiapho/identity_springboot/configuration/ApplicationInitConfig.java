@@ -1,7 +1,7 @@
 package com.devgiapho.identity_springboot.configuration;
 
+import com.devgiapho.identity_springboot.constant.PredefinedRole;
 import com.devgiapho.identity_springboot.entity.User;
-import com.devgiapho.identity_springboot.enums.Role;
 import com.devgiapho.identity_springboot.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ApplicationInitConfig {
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
                 var roles = new HashSet<String>();
-                roles.add(Role.ADMIN.name());
+                roles.add(PredefinedRole.ADMIN_ROLE);
 
                 User user = User.builder()
                         .username("admin")
