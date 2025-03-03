@@ -15,6 +15,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     ROLE_NOT_FOUND(1008, "Role not found", HttpStatus.NOT_FOUND),
+    INVALID_DATE_OF_BIRTH(1009, "Invalid date of birth", HttpStatus.BAD_REQUEST),
     // Add more error codes as needed...
     ;
 
