@@ -1,9 +1,12 @@
 package com.devgiapho.identity_springboot.exception;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
 public enum ErrorCode {
 
@@ -19,9 +22,9 @@ public enum ErrorCode {
     // Add more error codes as needed...
     ;
 
-    private int code;
-    private String message;
-    private HttpStatusCode statusCode;
+    int code;
+    String message;
+    HttpStatusCode statusCode;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
