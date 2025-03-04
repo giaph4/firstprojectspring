@@ -20,6 +20,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Controller
 public class RoleController {
+
     RoleService roleService;
 
     @PostMapping()
@@ -29,7 +30,6 @@ public class RoleController {
                 .build();
     }
 
-    //TODO: Implement update role
     @GetMapping
     ApiRespone<List<RoleResponse>> getAll() {
         return ApiRespone.<List<RoleResponse>>builder()
