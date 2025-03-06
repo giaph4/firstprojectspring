@@ -1,6 +1,5 @@
 package com.devgiapho.identity_springboot.dto.request;
 
-import com.devgiapho.identity_springboot.entity.Role;
 import com.devgiapho.identity_springboot.validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
