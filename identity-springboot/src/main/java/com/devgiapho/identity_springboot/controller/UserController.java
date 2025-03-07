@@ -27,12 +27,10 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    ApiRespone<User> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiRespone<User> userApiRespone = new ApiRespone<>();
-        userApiRespone.setMessage("User created successfully: " + request.getUsername());
-        userApiRespone.setResult(userService.createUser(request));
-
-        return userApiRespone;
+    ApiRespone<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        return ApiRespone.<UserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
     }
 
     @GetMapping

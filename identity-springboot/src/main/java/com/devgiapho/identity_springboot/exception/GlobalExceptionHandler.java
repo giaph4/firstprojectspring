@@ -5,19 +5,23 @@ import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String MIN_ATTRIBUTE = "min";
+
     // thêm xử lý cho RuntimeException
     @ExceptionHandler(value = RuntimeException.class)
-    ResponseEntity<ApiRespone<Void>> handlingRuntimeException(RuntimeException e) {
+    ResponseEntity<ApiRespone<Void>> handlingRuntimeException() {
         ApiRespone<Void> apiRespone = new ApiRespone<>();
 
         apiRespone.setCode(ErrorCode.UNCATED.getCode());
@@ -45,7 +49,7 @@ public class GlobalExceptionHandler {
 
     // thêm xử lý cho AccessDeniedException
     @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<ApiRespone<?>> handlingAccessDeniedException(AccessDeniedException e) {
+    ResponseEntity<ApiRespone<?>> handlingAccessDeniedException() {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
         return ResponseEntity.status(errorCode.getStatusCode())
@@ -58,20 +62,26 @@ public class GlobalExceptionHandler {
     // thêm xử lý cho MethodArgumentNotValidException
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiRespone<?>> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+
         String enumKey = Objects.requireNonNull(e.getFieldError()).getDefaultMessage();
         ErrorCode errorCode = ErrorCode.valueOf((enumKey));
 
-        // nó không hoạt động trong trường hợp của tôi nên tôi phải sử dụng đoạn mã dưới đây để lấy mã lỗi từ khóa enum
         var constrainViolation = e.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
 
-        var attributes = constrainViolation.getConstraintDescriptor().getAttributes();
+        Map<String, Object> attributes = constrainViolation.getConstraintDescriptor().getAttributes();
 
         log.info(attributes.toString());
 
         ApiRespone<Void> apiRespone = new ApiRespone<>();
 
         apiRespone.setCode(errorCode.getCode());
-        apiRespone.setMessage(errorCode.getMessage());
+        apiRespone.setMessage(mapAttribute(errorCode.getMessage(), attributes));
         return ResponseEntity.badRequest().body(apiRespone);
+    }
+
+    private String mapAttribute(String message, Map<String, Object> attributes) {
+        String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
+
+        return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
     }
 }

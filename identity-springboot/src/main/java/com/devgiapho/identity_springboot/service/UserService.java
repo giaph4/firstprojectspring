@@ -35,20 +35,24 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
 
-    public User createUser(UserCreationRequest request) {
+    public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
+
         user.setRoles(roles);
 
         try {
-            return userRepository.save(user);
+            user = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
-            throw new AppException(ErrorCode.USER_EXISTS);
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
+
+        return userMapper.toUserResponse(user);
     }
+
 
     //    @PreAuthorize("hasRole('ADMIN')") // Kiểm tra quyền trước khi thực thi
     @PreAuthorize("hasAuthority('SEE_LIST_USER')")
@@ -64,7 +68,7 @@ public class UserService {
         log.info("Get user by id: {}", userId);
         return userMapper.toUserResponse(
                 userRepository.findById(userId)
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTS))
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTED))
         );
     }
 
@@ -73,14 +77,14 @@ public class UserService {
         String name = context.getAuthentication().getName();
 
         User user = userRepository.findByUsername(name)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTS));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTED));
         return userMapper.toUserResponse(user);
     }
 
     @PostAuthorize("returnObject.username == authentication.name")
     public User updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTS));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTED));
         userMapper.updateUser(user, request);
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
