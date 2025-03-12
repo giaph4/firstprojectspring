@@ -68,7 +68,7 @@ public class UserService {
         log.info("Get user by id: {}", userId);
         return userMapper.toUserResponse(
                 userRepository.findById(userId)
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_EXISTED))
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND))
         );
     }
 
